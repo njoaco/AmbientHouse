@@ -1,17 +1,25 @@
 import tkinter as tk
 from tkinter import messagebox
 import pygame
-from PIL import Image, ImageTk
+from PIL import Image, ImageTk, ImageSequence
 
 pygame.mixer.init()
 
+# Diccionario para mantener el estado de reproducción de cada sonido
+playing_sounds = {}
+
 def play_sound(sound_file):
-    click_sound = "assets/sounds/click.mp3"
-    pygame.mixer.music.load(click_sound)
-    pygame.mixer.music.play()
-    pygame.time.wait(300)
-    pygame.mixer.music.load(sound_file)
-    pygame.mixer.music.play(-1)
+    if sound_file in playing_sounds and playing_sounds[sound_file]:
+        stop_sound()
+        playing_sounds[sound_file] = False
+    else:
+        click_sound = "assets/sounds/click.mp3"
+        pygame.mixer.music.load(click_sound)
+        pygame.mixer.music.play()
+        pygame.time.wait(300)
+        pygame.mixer.music.load(sound_file)
+        pygame.mixer.music.play(-1)
+        playing_sounds[sound_file] = True
 
 def stop_sound():
     pygame.mixer.music.stop()
@@ -28,16 +36,16 @@ root.iconphoto(False, icon_image)
 button_frame = tk.Frame(root, bg="white")
 button_frame.pack(pady=10, expand=True)
 
-def resize_image(image_path, size=(100, 100)):
+def resize_image(image_path, size=(150, 150)):
     image = Image.open(image_path)
     image = image.resize(size, Image.LANCZOS)
     return ImageTk.PhotoImage(image)
 
-rain_image = tk.PhotoImage(file="assets/buttons/rain.png")
-fire_image = tk.PhotoImage(file="assets/buttons/fire.png")
-noise_image = tk.PhotoImage(file="assets/buttons/noise.png")
-ocean_image = tk.PhotoImage(file="assets/buttons/ocean.png")
-jazz_image = tk.PhotoImage(file="assets/buttons/jazz.png")
+rain_image = resize_image("assets/buttons/rain.png")
+fire_image = resize_image("assets/buttons/fire.png")
+noise_image = resize_image("assets/buttons/noise.png")
+ocean_image = resize_image("assets/buttons/ocean.png")
+jazz_image = resize_image("assets/buttons/jazz.png")
 
 button1 = tk.Button(button_frame, image=rain_image, command=lambda: play_sound("assets/sounds/rain.mp3"), bg="white", borderwidth=0)
 button1.pack(side=tk.LEFT, padx=10)
