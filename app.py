@@ -22,6 +22,8 @@ def play_sound(sound_file):
         playing_sounds[sound_file] = True
 
 def stop_sound():
+    click_sound = "assets/sounds/click.mp3"
+    pygame.mixer.music.load(click_sound)
     pygame.mixer.music.stop()
 
 root = tk.Tk()
